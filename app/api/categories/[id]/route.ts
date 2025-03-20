@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 import { cookies } from "next/headers";
 
+export const dynamic = "force-dynamic";
+
 // DELETE a category by ID
 export async function DELETE(
   request: Request,

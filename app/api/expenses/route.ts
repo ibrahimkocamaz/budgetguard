@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 import { cookies } from "next/headers";
 
+export const dynamic = "force-dynamic";
+
 // Get all expenses for the logged-in user
 export async function GET(request: Request) {
   try {
