@@ -8,8 +8,8 @@ interface Category {
   name: string;
 }
 
-// Create a custom event for expense added
-const expenseAddedEvent = new CustomEvent("expenseAdded", { detail: {} });
+// We'll create the custom event in useEffect to ensure it only runs in browser
+let expenseAddedEvent: CustomEvent;
 
 export default function ExpenseForm() {
   const router = useRouter();
@@ -23,6 +23,12 @@ export default function ExpenseForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  // Create custom event only in browser
+  useEffect(() => {
+    // Only create the event in the browser, not during SSR
+    expenseAddedEvent = new CustomEvent("expenseAdded", { detail: {} });
+  }, []);
 
   // Helper function to get today's date in the format YYYY-MM-DD
   function getTodayDateString() {
