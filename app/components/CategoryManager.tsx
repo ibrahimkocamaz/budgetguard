@@ -102,19 +102,19 @@ export default function CategoryManager() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-32">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#78A083]"></div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">
+    <div className="bg-[#35374B] p-6 rounded-lg shadow-md">
+      <h2 className="text-xl font-semibold mb-4 text-white">
         Manage Categories
       </h2>
 
       {error && (
-        <div className="p-4 bg-red-50 text-red-500 rounded-md mb-4">
+        <div className="p-4 bg-red-900 text-white rounded-md mb-4">
           <p>{error}</p>
         </div>
       )}
@@ -126,12 +126,12 @@ export default function CategoryManager() {
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
             placeholder="Enter new category name"
-            className="flex-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="flex-1 p-2 border border-[#50727B] rounded bg-[#344955] text-white focus:outline-none focus:ring-2 focus:ring-[#78A083]"
             disabled={isSubmitting}
           />
           <button
             type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-1 hover:bg-blue-600 disabled:bg-blue-300"
+            className="bg-[#78A083] text-white px-4 py-2 rounded flex items-center gap-1 hover:bg-[#50727B] disabled:opacity-50"
             disabled={isSubmitting || !newCategory.trim()}
           >
             <FaPlus className="w-3 h-3" />
@@ -140,31 +140,31 @@ export default function CategoryManager() {
         </div>
       </form>
 
-      <div className="border rounded-md overflow-hidden">
-        <div className="bg-gray-50 px-4 py-2 border-b">
-          <h3 className="font-medium text-gray-700">Your Categories</h3>
+      <div className="border border-[#50727B] rounded-md overflow-hidden">
+        <div className="bg-[#344955] px-4 py-2 border-b border-[#50727B]">
+          <h3 className="font-medium text-white">Your Categories</h3>
         </div>
 
         {categories.length === 0 ? (
-          <div className="p-4 text-gray-500 text-center">
+          <div className="p-4 text-gray-300 text-center">
             No categories found. Add your first category!
           </div>
         ) : (
-          <ul className="divide-y">
+          <ul className="divide-y divide-[#50727B]">
             {categories.map((category) => (
               <li
                 key={category.id}
-                className="flex justify-between items-center px-4 py-3 hover:bg-gray-50"
+                className="flex justify-between items-center px-4 py-3 hover:bg-[#344955]"
               >
-                <span className="text-gray-700">{category.name}</span>
+                <span className="text-white">{category.name}</span>
                 <button
                   onClick={() => handleDeleteCategory(category.id)}
                   disabled={deleteLoading === category.id}
-                  className="text-red-500 hover:text-red-700 disabled:opacity-50"
+                  className="text-red-400 hover:text-red-300 disabled:opacity-50"
                   title="Delete category"
                 >
                   {deleteLoading === category.id ? (
-                    <div className="w-4 h-4 border-t-2 border-red-500 rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-t-2 border-red-400 rounded-full animate-spin" />
                   ) : (
                     <FaTrash className="w-4 h-4" />
                   )}
