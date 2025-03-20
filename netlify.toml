@@ -5,8 +5,8 @@
 [build.environment]
   NEXT_TELEMETRY_DISABLED = "1"
   NEXT_USE_NETLIFY_EDGE = "true"
-  # Note: DATABASE_URL should be set in Netlify UI environment variables
-  # with a PostgreSQL connection string
+  # Use the Neon PostgreSQL database in Netlify
+  DATABASE_URL = "postgresql://neondb_owner:npg_ToXGaN5W0wvE@ep-jolly-rice-a5lawqbw-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
