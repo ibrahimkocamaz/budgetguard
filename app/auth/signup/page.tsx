@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -27,13 +28,17 @@ export default function SignupPage() {
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+      setError("Password must be at least 6 characters long");
       return;
     }
 
     try {
       setIsLoading(true);
       setError("");
+
+      // Show a loading toast
+      toast.loading("Creating your account...");
+      console.log("Attempting to sign up:", { email, name });
 
       const response = await fetch("/api/auth/signup", {
         method: "POST",
@@ -43,14 +48,23 @@ export default function SignupPage() {
         body: JSON.stringify({ name, email, password }),
       });
 
+      console.log("Signup API response status:", response.status);
+      toast.dismiss();
+
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || "Registration failed");
+        console.error("Signup error response:", data);
+        toast.error("Signup failed: " + (data.error || "Unknown error"));
+        throw new Error(data.error || "Signup failed");
       }
 
-      // Redirect to login on successful registration
-      router.push("/auth/login?registered=true");
+      toast.success("Account created successfully!");
+
+      // Redirect to login page on successful signup
+      router.push("/auth/login");
     } catch (error: any) {
+      console.error("Signup error:", error);
+      toast.error("Signup error: " + error.message);
       setError(error.message);
     } finally {
       setIsLoading(false);
@@ -70,7 +84,7 @@ export default function SignupPage() {
               href="/auth/login"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
-              sign in to existing account
+              sign in to your existing account
             </Link>
           </p>
         </div>
@@ -82,10 +96,10 @@ export default function SignupPage() {
         )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
+          <div className="rounded-md shadow-sm space-y-2">
             <div>
               <label htmlFor="name" className="sr-only">
-                Full Name
+                Name
               </label>
               <input
                 id="name"
@@ -95,8 +109,8 @@ export default function SignupPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Full Name"
+                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Full name"
               />
             </div>
             <div>
@@ -111,7 +125,7 @@ export default function SignupPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
             </div>
@@ -127,7 +141,7 @@ export default function SignupPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
             </div>
@@ -143,8 +157,8 @@ export default function SignupPage() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Confirm Password"
+                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Confirm password"
               />
             </div>
           </div>
@@ -155,7 +169,7 @@ export default function SignupPage() {
               disabled={isLoading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400"
             >
-              {isLoading ? "Creating Account..." : "Create Account"}
+              {isLoading ? "Creating account..." : "Create account"}
             </button>
           </div>
         </form>

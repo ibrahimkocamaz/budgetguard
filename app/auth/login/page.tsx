@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -23,6 +24,12 @@ export default function LoginPage() {
       setIsLoading(true);
       setError("");
 
+      // Show a toast message for debugging
+      toast.loading("Connecting to API...");
+
+      // Log the API call for debugging
+      console.log("Attempting to login with:", { email });
+
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -31,14 +38,25 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
+      // Log the response status for debugging
+      console.log("Login API response status:", response.status);
+      toast.dismiss();
+
       if (!response.ok) {
         const data = await response.json();
+        console.error("Login API error:", data);
+        toast.error("Login failed: " + (data.error || "Unknown error"));
         throw new Error(data.error || "Login failed");
       }
+
+      // Show success toast
+      toast.success("Login successful!");
 
       // Redirect to dashboard on successful login
       router.push("/dashboard");
     } catch (error: any) {
+      console.error("Login error:", error);
+      toast.error("Login error: " + error.message);
       setError(error.message);
     } finally {
       setIsLoading(false);
@@ -113,6 +131,13 @@ export default function LoginPage() {
             >
               {isLoading ? "Signing in..." : "Sign in"}
             </button>
+          </div>
+
+          {/* Add test user info */}
+          <div className="mt-4 p-4 bg-gray-50 rounded-md text-sm">
+            <p className="font-semibold text-gray-700">For testing:</p>
+            <p>Email: test@example.com</p>
+            <p>Password: password123</p>
           </div>
         </form>
       </div>

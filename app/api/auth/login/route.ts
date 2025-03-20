@@ -5,8 +5,12 @@ import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   try {
+    console.log("Login API route called");
+
     const body = await request.json();
     const { email, password } = body;
+
+    console.log("Attempting login for email:", email);
 
     // Find the user
     const user = await prisma.user.findUnique({
@@ -14,21 +18,27 @@ export async function POST(request: Request) {
     });
 
     if (!user) {
+      console.log("User not found:", email);
       return NextResponse.json(
         { error: "Invalid email or password" },
         { status: 401 }
       );
     }
+
+    console.log("User found, verifying password");
 
     // Verify password
     const isPasswordValid = await comparePasswords(password, user.password);
 
     if (!isPasswordValid) {
+      console.log("Invalid password for user:", email);
       return NextResponse.json(
         { error: "Invalid email or password" },
         { status: 401 }
       );
     }
+
+    console.log("Password valid, setting cookie");
 
     // Set session cookie
     const cookieStore = await cookies();
@@ -36,8 +46,11 @@ export async function POST(request: Request) {
       httpOnly: true,
       path: "/",
       maxAge: 60 * 60 * 24 * 7, // 1 week
-      sameSite: "strict",
+      sameSite: "lax", // Changed from 'strict' to 'lax' for better cross-domain compatibility
+      secure: process.env.NODE_ENV === "production", // Only send cookie over HTTPS in production
     });
+
+    console.log("Session cookie set, returning user data");
 
     // Return user without password
     const { password: _, ...userWithoutPassword } = user;
