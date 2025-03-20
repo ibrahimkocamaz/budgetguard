@@ -5,6 +5,8 @@
 [build.environment]
   NEXT_TELEMETRY_DISABLED = "1"
   NEXT_USE_NETLIFY_EDGE = "true"
+  # For local development only. On Netlify, this should be set in the Netlify UI
+  # DATABASE_URL = "file:./dev.db"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
@@ -12,5 +14,10 @@
 [functions]
   external_node_modules = ["@prisma/client", "bcrypt"]
   node_bundler = "esbuild"
+
+# Include JWT token handler 
+[[edge_functions]]
+  function = "auth-edge"
+  path = "/api/auth/*"
 
 # No direct redirects needed - Next.js plugin handles this 
