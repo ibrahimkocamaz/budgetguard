@@ -3,6 +3,9 @@ import { comparePasswords } from "@/app/lib/auth";
 import prisma from "@/app/lib/prisma";
 import { cookies } from "next/headers";
 
+// Force API routes to be dynamically rendered
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   try {
     console.log("Login API route called");

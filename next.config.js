@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Don't use static export - let Netlify handle SSR
+  // We're using SSR, not static export
   // output: "export",
 
   // Disable server-side features that aren't compatible with static export
@@ -15,6 +15,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+
+  // Enable React strict mode for better development
+  reactStrictMode: true,
 };
 
 module.exports = nextConfig;
