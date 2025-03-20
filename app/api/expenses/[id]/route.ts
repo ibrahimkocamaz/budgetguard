@@ -5,10 +5,10 @@ import { cookies } from "next/headers";
 // GET an expense by ID
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const cookieStore = await cookies();
     const userId = cookieStore.get("session")?.value;
 
@@ -42,10 +42,10 @@ export async function GET(
 // DELETE an expense
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const cookieStore = await cookies();
     const userId = cookieStore.get("session")?.value;
 

@@ -5,10 +5,10 @@ import { cookies } from "next/headers";
 // DELETE a category by ID
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const cookieStore = await cookies();
     const userId = cookieStore.get("session")?.value;
 
