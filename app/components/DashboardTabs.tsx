@@ -55,8 +55,8 @@ export default function DashboardTabs() {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <div className="border-b">
+      <div className="bg-[#35374B] shadow rounded-lg overflow-hidden">
+        <div className="border-b border-[#50727B]">
           <div className="flex overflow-x-auto">
             {tabs.map((tab) => (
               <button
@@ -64,8 +64,8 @@ export default function DashboardTabs() {
                 onClick={() => handleTabClick(tab.id)}
                 className={`px-4 py-3 text-sm font-medium whitespace-nowrap focus:outline-none ${
                   activeTab === tab.id
-                    ? "border-b-2 border-blue-500 text-blue-600"
-                    : "text-gray-500 hover:text-gray-700"
+                    ? "border-b-2 border-[#78A083] text-[#78A083]"
+                    : "text-gray-300 hover:text-white"
                 }`}
               >
                 {tab.label}
@@ -75,7 +75,7 @@ export default function DashboardTabs() {
         </div>
 
         {showCustomDatePicker && (
-          <div className="p-4 bg-gray-50 border-b">
+          <div className="p-4 bg-[#344955] border-b border-[#50727B]">
             <form
               onSubmit={handleCustomDateSubmit}
               className="flex flex-wrap gap-4 items-end"
@@ -83,7 +83,7 @@ export default function DashboardTabs() {
               <div>
                 <label
                   htmlFor="fromDate"
-                  className="block text-xs text-gray-500 mb-1"
+                  className="block text-xs text-gray-300 mb-1"
                 >
                   From
                 </label>
@@ -92,14 +92,14 @@ export default function DashboardTabs() {
                   id="fromDate"
                   value={fromDate}
                   onChange={(e) => setFromDate(e.target.value)}
-                  className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="border border-[#50727B] rounded px-3 py-2 bg-[#344955] text-white focus:outline-none focus:ring-1 focus:ring-[#78A083]"
                   required
                 />
               </div>
               <div>
                 <label
                   htmlFor="toDate"
-                  className="block text-xs text-gray-500 mb-1"
+                  className="block text-xs text-gray-300 mb-1"
                 >
                   To
                 </label>
@@ -108,13 +108,13 @@ export default function DashboardTabs() {
                   id="toDate"
                   value={toDate}
                   onChange={(e) => setToDate(e.target.value)}
-                  className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="border border-[#50727B] rounded px-3 py-2 bg-[#344955] text-white focus:outline-none focus:ring-1 focus:ring-[#78A083]"
                   required
                 />
               </div>
               <button
                 type="submit"
-                className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="bg-[#78A083] text-white rounded px-4 py-2 hover:bg-[#50727B] focus:outline-none focus:ring-2 focus:ring-[#78A083] transition duration-200"
               >
                 Apply
               </button>

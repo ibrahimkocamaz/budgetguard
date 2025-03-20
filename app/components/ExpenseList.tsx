@@ -210,9 +210,9 @@ export default function ExpenseList({
   ]);
 
   return (
-    <div className="bg-white shadow rounded-lg p-6">
+    <div className="bg-[#35374B] shadow rounded-lg p-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4 md:mb-0">
+        <h2 className="text-xl font-semibold text-white mb-4 md:mb-0">
           {getPeriodTitle()}
         </h2>
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
@@ -223,7 +223,7 @@ export default function ExpenseList({
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="block w-full pl-10 pr-3 py-2 border border-[#50727B] rounded-md leading-5 bg-[#344955] text-white placeholder-gray-400 focus:outline-none focus:ring-[#78A083] focus:border-[#78A083] sm:text-sm"
               placeholder="Search expenses..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -232,7 +232,7 @@ export default function ExpenseList({
 
           <button
             onClick={handleRefresh}
-            className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#78A083] hover:bg-[#50727B] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#78A083] transition duration-200"
             disabled={refreshing}
           >
             {refreshing ? (
@@ -250,112 +250,72 @@ export default function ExpenseList({
         </div>
       </div>
 
-      {/* Show error message if there is one */}
-      {error && (
-        <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
-          <div className="flex">
-            <div className="ml-3">
-              <p className="text-sm text-red-700">{error}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Show loading spinner if loading */}
       {loading ? (
-        <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="flex justify-center items-center py-8">
+          <div className="loader text-[#78A083]">Loading expenses...</div>
+        </div>
+      ) : error ? (
+        <div className="bg-red-900 border border-red-700 text-white px-4 py-3 rounded mb-4">
+          {error}
         </div>
       ) : expenses.length === 0 ? (
-        <div className="text-center py-12">
-          <p>No expenses found for this period.</p>
-          {debouncedSearchQuery && (
-            <p className="text-gray-500 mt-2">
-              Try adjusting your search or date range.
-            </p>
-          )}
+        <div className="text-center py-8 text-gray-300">
+          <p className="text-lg">No expenses found</p>
+          <p className="text-sm mt-2">
+            {debouncedSearchQuery
+              ? "Try a different search term"
+              : "Add some expenses to get started"}
+          </p>
         </div>
       ) : (
-        <div className="mt-4">
-          {deleteSuccess && (
-            <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
-              <div className="flex">
-                <div className="ml-3">
-                  <p className="text-sm text-green-700">
-                    Expense deleted successfully
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
+        <>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-[#50727B]">
+              <thead>
                 <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Date
                   </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Description
                   </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Category
                   </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Amount
                   </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="divide-y divide-[#50727B]">
                 {expenses.map((expense) => (
-                  <tr key={expense.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <tr key={expense.id} className="hover:bg-[#344955]">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                       {formatDate(expense.date)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                       {expense.description || "-"}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                       {expense.category?.name || "-"}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#78A083]">
                       {formatAmount(expense.amount)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                       <button
                         onClick={() => handleDelete(expense.id)}
-                        className="text-red-600 hover:text-red-900"
                         disabled={deleteLoading === expense.id}
+                        className="text-red-400 hover:text-red-600 disabled:opacity-50 transition-colors duration-200"
+                        title="Delete expense"
                       >
                         {deleteLoading === expense.id ? (
-                          <span className="inline-flex items-center">
-                            <FaTrash className="animate-pulse h-4 w-4" />
-                            <span className="ml-1">Deleting...</span>
-                          </span>
+                          <FaSync className="animate-spin h-4 w-4" />
                         ) : (
-                          <span className="inline-flex items-center">
-                            <FaTrash className="h-4 w-4" />
-                            <span className="ml-1">Delete</span>
-                          </span>
+                          <FaTrash className="h-4 w-4" />
                         )}
                       </button>
                     </td>
@@ -364,7 +324,13 @@ export default function ExpenseList({
               </tbody>
             </table>
           </div>
-        </div>
+
+          {deleteSuccess && (
+            <div className="mt-4 p-2 bg-[#78A083] text-white text-center rounded">
+              Expense deleted successfully
+            </div>
+          )}
+        </>
       )}
     </div>
   );

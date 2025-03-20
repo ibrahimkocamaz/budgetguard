@@ -177,7 +177,7 @@ export default function ExpenseStats() {
           font: {
             size: 11,
           },
-          color: "#333333",
+          color: "#ffffff",
         },
       },
       tooltip: {
@@ -197,16 +197,16 @@ export default function ExpenseStats() {
 
   if (isLoading && !statData) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-md h-80 flex justify-center items-center">
-        <div className="loader text-gray-700">Loading statistics...</div>
+      <div className="bg-[#35374B] p-6 rounded-lg shadow-md h-80 flex justify-center items-center">
+        <div className="loader text-white">Loading statistics...</div>
       </div>
     );
   }
 
   if (error && !statData) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      <div className="bg-[#35374B] p-6 rounded-lg shadow-md">
+        <div className="bg-red-900 border border-red-700 text-white px-4 py-3 rounded mb-4">
           {error}
         </div>
         <button
@@ -215,7 +215,7 @@ export default function ExpenseStats() {
               ? fetchStats(period, startDate, endDate)
               : fetchStats(period)
           }
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 py-2 bg-[#78A083] text-white rounded hover:bg-[#50727B] transition duration-200"
         >
           Try Again
         </button>
@@ -224,17 +224,15 @@ export default function ExpenseStats() {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
+    <div className="bg-[#35374B] p-6 rounded-lg shadow-md">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <h2 className="text-xl font-semibold text-gray-800">
-          Expense Breakdown
-        </h2>
+        <h2 className="text-xl font-semibold text-white">Expense Breakdown</h2>
 
         <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
           <select
             value={period}
             onChange={(e) => handlePeriodChange(e.target.value)}
-            className="border rounded px-3 py-1 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="border border-[#50727B] rounded px-3 py-1 text-sm text-white bg-[#344955] focus:outline-none focus:ring-2 focus:ring-[#78A083]"
           >
             <option value="day">Today</option>
             <option value="week">This Week</option>
@@ -249,28 +247,26 @@ export default function ExpenseStats() {
               className="flex flex-col md:flex-row gap-2 items-end"
             >
               <div>
-                <label className="block text-xs text-gray-600">From</label>
+                <label className="block text-xs text-gray-300 mb-1">From</label>
                 <input
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="border rounded px-2 py-1 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  required
+                  className="border border-[#50727B] rounded px-3 py-1 text-sm text-white bg-[#344955] focus:outline-none focus:ring-2 focus:ring-[#78A083]"
                 />
               </div>
               <div>
-                <label className="block text-xs text-gray-600">To</label>
+                <label className="block text-xs text-gray-300 mb-1">To</label>
                 <input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="border rounded px-2 py-1 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  required
+                  className="border border-[#50727B] rounded px-3 py-1 text-sm text-white bg-[#344955] focus:outline-none focus:ring-2 focus:ring-[#78A083]"
                 />
               </div>
               <button
                 type="submit"
-                className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors"
+                className="px-3 py-1 bg-[#78A083] text-white rounded hover:bg-[#50727B] transition duration-200"
               >
                 Apply
               </button>
@@ -279,59 +275,50 @@ export default function ExpenseStats() {
         </div>
       </div>
 
-      {statData && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="flex flex-col justify-center">
-            <div className="mb-2">
-              <div className="text-sm text-gray-600">Total Expenses</div>
-              <div className="text-2xl font-bold text-gray-800">
-                {formatCurrency(statData.total)}
-              </div>
-              <div className="text-sm text-gray-600 mt-1">
-                {isCustomDate
-                  ? `${new Date(
-                      statData.startDate
-                    ).toLocaleDateString()} - ${new Date(
-                      statData.endDate
-                    ).toLocaleDateString()}`
-                  : getPeriodLabel(statData.period)}
-              </div>
-            </div>
-
-            {statData.byCategory.length > 0 ? (
-              <div className="mt-6">
-                <div className="text-sm text-gray-600 mb-2">Top Categories</div>
-                <div className="space-y-2">
-                  {statData.byCategory
-                    .sort((a, b) => b.amount - a.amount)
-                    .slice(0, 3)
-                    .map((item, index) => (
-                      <div key={index} className="flex justify-between">
-                        <div className="text-sm text-gray-700">
-                          {item.category}
-                        </div>
-                        <div className="text-sm font-medium text-gray-800">
-                          {formatCurrency(item.amount)}
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            ) : (
-              <div className="mt-6 text-gray-500 text-sm">
-                No expense data available
-              </div>
-            )}
+      {!statData || !statData.byCategory.length ? (
+        <div className="h-60 flex flex-col items-center justify-center text-center text-gray-300">
+          <p className="mb-4">No expense data available for this period.</p>
+          <p className="text-sm">
+            Try a different time period or add some expenses.
+          </p>
+        </div>
+      ) : (
+        <div>
+          <div className="h-60 mb-4">
+            <Pie data={getChartData()} options={chartOptions} />
           </div>
 
-          <div className="lg:col-span-2 h-64">
-            {statData.byCategory.length > 0 ? (
-              <Pie data={getChartData()} options={chartOptions} />
-            ) : (
-              <div className="h-full flex items-center justify-center text-gray-500">
-                No data to display
-              </div>
-            )}
+          <div className="mt-6 border-t border-[#50727B] pt-4">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-medium text-white">
+                {getPeriodLabel(period)}
+              </h3>
+              <p className="text-[#78A083] font-bold">
+                {formatCurrency(statData.total)}
+              </p>
+            </div>
+
+            <p className="text-xs text-gray-300">
+              {new Date(statData.startDate).toLocaleDateString()} -{" "}
+              {new Date(statData.endDate).toLocaleDateString()}
+            </p>
+          </div>
+
+          <div className="mt-4">
+            <h3 className="font-medium text-white mb-2">Category Breakdown</h3>
+            <ul className="space-y-2">
+              {statData.byCategory.map((item, index) => (
+                <li
+                  key={index}
+                  className="flex justify-between items-center p-2 rounded bg-[#344955]"
+                >
+                  <span className="text-white">{item.category}</span>
+                  <span className="text-[#78A083] font-medium">
+                    {formatCurrency(item.amount)}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       )}
