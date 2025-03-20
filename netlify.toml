@@ -4,10 +4,19 @@
 
 [build.environment]
   NEXT_TELEMETRY_DISABLED = "1"
+  # Force server-side rendering mode
+  NEXT_FORCE_DYNAMIC = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
 [functions]
   external_node_modules = ["@prisma/client", "bcrypt"]
-  node_bundler = "esbuild" 
+  node_bundler = "esbuild"
+  
+# Ensure dynamic routes are handled correctly
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/next_handler"
+  status = 200
+  force = true 
