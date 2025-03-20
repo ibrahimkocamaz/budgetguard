@@ -58,6 +58,46 @@ This project is configured for deployment on Netlify:
 
 The Netlify configuration is already included in the `netlify.toml` file.
 
+## Using Neon with Netlify (Recommended)
+
+[Neon](https://neon.tech) provides serverless PostgreSQL databases that work perfectly with Netlify deployments:
+
+1. **Create a Neon account**:
+
+   - Go to [neon.tech](https://neon.tech) and sign up for a free account
+   - You can sign up with GitHub to make the process easier
+
+2. **Create a project**:
+
+   - Click "New Project"
+   - Name it "budgetguard" (or any name you prefer)
+   - Choose a region closest to your target audience
+   - Click "Create Project"
+
+3. **Get your connection string**:
+
+   - After project creation, go to the "Connection Details" tab
+   - Under "Connection string", copy the string that looks like:
+     ```
+     postgresql://[username]:[password]@[endpoint]/[dbname]
+     ```
+
+4. **Set up environment variable in Netlify**:
+
+   - In Netlify, go to Site settings > Environment variables
+   - Add the DATABASE_URL variable with your Neon connection string
+
+5. **Deploy your site**:
+   - Your site will now automatically connect to your Neon database
+
+### Benefits of using Neon:
+
+- **Free tier** for small projects
+- **Serverless architecture** that scales with your app
+- **Branch databases** for development and testing
+- **No connection limits** in the free tier
+- **Automatic backups**
+
 ## License
 
 MIT
