@@ -60,8 +60,25 @@ export async function POST(request: Request) {
     return NextResponse.json(userWithoutPassword);
   } catch (error) {
     console.error("Error during login:", error);
+
+    // Provide more detailed error information
+    let errorMessage = "Something went wrong during login";
+    let errorDetails = {};
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+      errorDetails = {
+        name: error.name,
+        stack: process.env.NODE_ENV !== "production" ? error.stack : undefined,
+      };
+    }
+
     return NextResponse.json(
-      { error: "Something went wrong during login" },
+      {
+        error: errorMessage,
+        details:
+          process.env.NODE_ENV !== "production" ? errorDetails : undefined,
+      },
       { status: 500 }
     );
   }
