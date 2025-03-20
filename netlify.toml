@@ -1,18 +1,14 @@
 [build]
   command = "prisma generate && npm run build"
-  publish = "out"
+  publish = ".next"
 
 [build.environment]
-  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+  # Do not skip the Next.js plugin - we want to use it
+  # NETLIFY_NEXT_PLUGIN_SKIP = "true"
   # Uncomment and set these values in Netlify dashboard environment variables instead
   # DATABASE_URL = ""
   # NEXTAUTH_URL = ""
   # NEXTAUTH_SECRET = ""
 
 [[plugins]]
-  package = "@netlify/plugin-nextjs"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200 
+  package = "@netlify/plugin-nextjs" 
