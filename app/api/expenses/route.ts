@@ -17,6 +17,7 @@ export async function GET(request: Request) {
     const period = url.searchParams.get("period");
     const fromDate = url.searchParams.get("from");
     const toDate = url.searchParams.get("to");
+    const searchQuery = url.searchParams.get("search");
 
     // Calculate date range based on period
     let startDate: Date | undefined;
@@ -79,6 +80,14 @@ export async function GET(request: Request) {
       whereCondition.date = {
         gte: startDate,
         lte: endDate,
+      };
+    }
+
+    // Add search functionality
+    if (searchQuery && searchQuery.trim() !== "") {
+      whereCondition.description = {
+        contains: searchQuery.trim(),
+        mode: "insensitive", // Case-insensitive search
       };
     }
 

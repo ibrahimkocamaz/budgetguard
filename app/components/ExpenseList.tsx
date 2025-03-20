@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-hot-toast";
-import { FaTrash, FaSync } from "react-icons/fa";
+import { FaTrash, FaSync, FaSearch } from "react-icons/fa";
 
 interface Category {
   id: string;
@@ -36,6 +36,17 @@ export default function ExpenseList({
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefresh, setLastRefresh] = useState(Date.now());
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+
+  // Debounce search to avoid too many API calls
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -95,6 +106,11 @@ export default function ExpenseList({
           params.append("to", toDate);
         }
 
+        // Add search query to params if it exists
+        if (debouncedSearchQuery.trim() !== "") {
+          params.append("search", debouncedSearchQuery);
+        }
+
         if (params.toString()) {
           url += `?${params.toString()}`;
         }
@@ -138,7 +154,7 @@ export default function ExpenseList({
         setRefreshing(false);
       }
     },
-    [activeTab, fromDate, toDate]
+    [activeTab, fromDate, toDate, debouncedSearchQuery]
   );
 
   const handleDelete = async (id: string) => {
@@ -152,158 +168,204 @@ export default function ExpenseList({
         throw new Error("Failed to delete expense");
       }
 
-      // Show success message
-      setDeleteSuccess(true);
-      setTimeout(() => setDeleteSuccess(false), 3000);
-
       // Remove the deleted expense from the list
       setExpenses((prev) => prev.filter((expense) => expense.id !== id));
+      setDeleteSuccess(true);
+
+      // Show success toast
       toast.success("Expense deleted successfully");
 
-      // Trigger a refresh to ensure our data is current
-      setLastRefresh(Date.now());
+      // Hide success message after a delay
+      setTimeout(() => {
+        setDeleteSuccess(false);
+      }, 3000);
     } catch (err) {
-      console.error("Error deleting expense:", err);
+      console.error(err);
       toast.error("Failed to delete expense");
     } finally {
       setDeleteLoading(null);
     }
   };
 
-  // Manual refresh handler
   const handleRefresh = () => {
     setLastRefresh(Date.now());
+    setRefreshing(true);
+    fetchExpenses(false);
   };
 
-  // Set up auto-refresh every 5 seconds
+  // Fetch expenses when activeTab, fromDate, toDate, lastRefresh, or debouncedSearchQuery changes
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setLastRefresh(Date.now());
-    }, 5000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  // Fetch expenses when activeTab, fromDate, toDate, or lastRefresh changes
-  useEffect(() => {
-    if (lastRefresh === Date.now()) {
-      // Full loading state for initial load or tab changes
-      fetchExpenses(true);
-    } else {
-      // Background refresh - don't show full loading state
+    if (refreshing) {
       fetchExpenses(false);
+    } else {
+      fetchExpenses(true);
     }
-  }, [activeTab, fromDate, toDate, lastRefresh, fetchExpenses]);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-32">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-4 bg-red-50 text-red-500 rounded-md">
-        <p>{error}</p>
-        <button
-          onClick={handleRefresh}
-          className="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-        >
-          Try Again
-        </button>
-      </div>
-    );
-  }
-
-  if (expenses.length === 0) {
-    return (
-      <div className="p-4 bg-gray-50 text-gray-500 rounded-md">
-        <p>No expenses found for this period.</p>
-      </div>
-    );
-  }
+  }, [
+    activeTab,
+    fromDate,
+    toDate,
+    lastRefresh,
+    debouncedSearchQuery,
+    fetchExpenses,
+  ]);
 
   return (
-    <div className="space-y-2">
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-gray-800">
+    <div className="bg-white shadow rounded-lg p-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4 md:mb-0">
           {getPeriodTitle()}
         </h2>
-        <button
-          onClick={handleRefresh}
-          className="text-blue-500 hover:text-blue-700 flex items-center gap-1"
-          disabled={refreshing}
-        >
-          <FaSync className={`h-3 w-3 ${refreshing ? "animate-spin" : ""}`} />
-          <span className="text-sm">
-            {refreshing ? "Refreshing..." : "Refresh"}
-          </span>
-        </button>
-      </div>
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        {deleteSuccess && (
-          <div className="p-4 bg-green-50 text-green-600 border-b">
-            Expense deleted successfully.
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
+          {/* Search Bar */}
+          <div className="relative flex-grow md:max-w-md">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FaSearch className="text-gray-400" />
+            </div>
+            <input
+              type="text"
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Search expenses..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
-        )}
-        <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Category
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Description
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amount
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {expenses.map((expense) => (
-                <tr key={expense.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {formatDate(expense.date)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {expense.category?.name || "N/A"}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {expense.description}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
-                    {formatAmount(expense.amount)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
-                    <button
-                      onClick={() => handleDelete(expense.id)}
-                      disabled={deleteLoading === expense.id}
-                      className="text-red-500 hover:text-red-700 disabled:opacity-50"
-                      title="Delete expense"
-                    >
-                      {deleteLoading === expense.id ? (
-                        <div className="w-4 h-4 border-t-2 border-red-500 rounded-full animate-spin mx-auto" />
-                      ) : (
-                        <FaTrash />
-                      )}
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+          <button
+            onClick={handleRefresh}
+            className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            disabled={refreshing}
+          >
+            {refreshing ? (
+              <>
+                <FaSync className="animate-spin -ml-1 mr-2 h-4 w-4" />
+                Refreshing...
+              </>
+            ) : (
+              <>
+                <FaSync className="-ml-1 mr-2 h-4 w-4" />
+                Refresh
+              </>
+            )}
+          </button>
         </div>
       </div>
+
+      {/* Show error message if there is one */}
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+          <div className="flex">
+            <div className="ml-3">
+              <p className="text-sm text-red-700">{error}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Show loading spinner if loading */}
+      {loading ? (
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        </div>
+      ) : expenses.length === 0 ? (
+        <div className="text-center py-12">
+          <p>No expenses found for this period.</p>
+          {debouncedSearchQuery && (
+            <p className="text-gray-500 mt-2">
+              Try adjusting your search or date range.
+            </p>
+          )}
+        </div>
+      ) : (
+        <div className="mt-4">
+          {deleteSuccess && (
+            <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
+              <div className="flex">
+                <div className="ml-3">
+                  <p className="text-sm text-green-700">
+                    Expense deleted successfully
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Date
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Description
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Category
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Amount
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {expenses.map((expense) => (
+                  <tr key={expense.id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {formatDate(expense.date)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {expense.description || "-"}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {expense.category?.name || "-"}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {formatAmount(expense.amount)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <button
+                        onClick={() => handleDelete(expense.id)}
+                        className="text-red-600 hover:text-red-900"
+                        disabled={deleteLoading === expense.id}
+                      >
+                        {deleteLoading === expense.id ? (
+                          <span className="inline-flex items-center">
+                            <FaTrash className="animate-pulse h-4 w-4" />
+                            <span className="ml-1">Deleting...</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center">
+                            <FaTrash className="h-4 w-4" />
+                            <span className="ml-1">Delete</span>
+                          </span>
+                        )}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
