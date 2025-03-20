@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { comparePasswords } from "@/app/lib/auth";
 import prisma from "@/app/lib/prisma";
 import { cookies } from "next/headers";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 // Force API routes to be dynamically rendered
 export const dynamic = "force-dynamic";
@@ -58,7 +59,7 @@ export async function POST(request: Request) {
     // Return user without password
     const { password: _, ...userWithoutPassword } = user;
     return NextResponse.json(userWithoutPassword);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error during login:", error);
 
     // Provide more detailed error information
@@ -71,6 +72,18 @@ export async function POST(request: Request) {
         name: error.name,
         stack: process.env.NODE_ENV !== "production" ? error.stack : undefined,
       };
+    }
+
+    // Check for Prisma-specific errors
+    if (error instanceof PrismaClientKnownRequestError) {
+      errorMessage = "Database error occurred. Please try again later.";
+      if (process.env.NODE_ENV !== "production") {
+        errorDetails = {
+          code: error.code,
+          meta: error.meta,
+          message: error.message,
+        };
+      }
     }
 
     return NextResponse.json(

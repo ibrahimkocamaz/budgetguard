@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { hashPassword } from "@/app/lib/auth";
 import prisma from "@/app/lib/prisma";
 import { cookies } from "next/headers";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 // Force API routes to be dynamically rendered
 export const dynamic = "force-dynamic";
@@ -83,10 +84,34 @@ export async function POST(request: Request) {
     // Return user without password
     const { password: _, ...userWithoutPassword } = user;
     return NextResponse.json(userWithoutPassword);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error during signup:", error);
+
+    // Provide more detailed error information
+    let errorMessage = "Something went wrong during signup";
+    let errorDetails = {};
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+      errorDetails = {
+        name: error.name,
+        stack: process.env.NODE_ENV !== "production" ? error.stack : undefined,
+      };
+    }
+
+    // Check for Prisma-specific errors
+    if (error instanceof PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        errorMessage = "This email is already in use";
+      }
+    }
+
     return NextResponse.json(
-      { error: "Something went wrong during signup" },
+      {
+        error: errorMessage,
+        details:
+          process.env.NODE_ENV !== "production" ? errorDetails : undefined,
+      },
       { status: 500 }
     );
   }
