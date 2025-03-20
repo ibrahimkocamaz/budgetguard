@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 export default function Home() {
@@ -38,7 +40,7 @@ export default function Home() {
             href="/auth/signup"
             className="px-8 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 text-lg font-medium"
           >
-            Get Started — It's Free
+            Get Started — It&apos;s Free
           </Link>
         </div>
       </section>
