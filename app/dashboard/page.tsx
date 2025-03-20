@@ -16,18 +16,18 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white">
+    <div className="min-h-screen bg-[#344955] text-white">
       <Navbar user={user} />
 
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-indigo-300">Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-8 text-white">Dashboard</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content - Stats and Expense List */}
           <div className="lg:col-span-2 space-y-6">
             <Suspense
               fallback={
-                <div className="p-8 bg-[#1e1e1e] rounded-lg shadow-md">
+                <div className="p-8 bg-[#35374B] rounded-lg shadow-md">
                   Loading statistics...
                 </div>
               }
@@ -37,7 +37,7 @@ export default async function DashboardPage() {
 
             <Suspense
               fallback={
-                <div className="p-8 bg-[#1e1e1e] rounded-lg shadow-md">
+                <div className="p-8 bg-[#35374B] rounded-lg shadow-md">
                   Loading expenses...
                 </div>
               }

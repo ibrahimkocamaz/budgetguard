@@ -51,17 +51,17 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-[#1e1e1e] p-8 rounded-lg shadow-md">
+    <div className="min-h-screen bg-[#344955] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-[#35374B] p-8 rounded-lg shadow-md">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-indigo-300">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             Create your BudgetGuard account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-300">
             Or{" "}
             <Link
               href="/auth/login"
-              className="font-medium text-indigo-400 hover:text-indigo-300"
+              className="font-medium text-[#78A083] hover:text-[#50727B]"
             >
               sign in to your account
             </Link>
@@ -88,7 +88,7 @@ export default function SignupPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-[#2d2d2d] placeholder-gray-400 text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-[#50727B] bg-[#344955] placeholder-gray-400 text-white rounded-t-md focus:outline-none focus:ring-[#78A083] focus:border-[#78A083] focus:z-10 sm:text-sm"
                 placeholder="Full Name"
               />
             </div>
@@ -104,7 +104,7 @@ export default function SignupPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-[#2d2d2d] placeholder-gray-400 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-[#50727B] bg-[#344955] placeholder-gray-400 text-white focus:outline-none focus:ring-[#78A083] focus:border-[#78A083] focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
             </div>
@@ -120,7 +120,7 @@ export default function SignupPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-[#2d2d2d] placeholder-gray-400 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-[#50727B] bg-[#344955] placeholder-gray-400 text-white focus:outline-none focus:ring-[#78A083] focus:border-[#78A083] focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
             </div>
@@ -136,7 +136,7 @@ export default function SignupPage() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-[#2d2d2d] placeholder-gray-400 text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-[#50727B] bg-[#344955] placeholder-gray-400 text-white rounded-b-md focus:outline-none focus:ring-[#78A083] focus:border-[#78A083] focus:z-10 sm:text-sm"
                 placeholder="Confirm Password"
               />
             </div>
@@ -146,7 +146,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#78A083] hover:bg-[#50727B] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#78A083] disabled:opacity-50"
             >
               {isLoading ? "Creating Account..." : "Sign up"}
             </button>

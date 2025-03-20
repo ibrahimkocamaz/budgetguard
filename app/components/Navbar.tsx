@@ -28,7 +28,7 @@ export default function Navbar({ user }: { user: any }) {
   };
 
   return (
-    <nav className="bg-indigo-900 text-white p-4 flex justify-between items-center">
+    <nav className="bg-[#35374B] text-white p-4 flex justify-between items-center">
       <div className="flex items-center space-x-4">
         <Link href="/dashboard" className="text-xl font-bold">
           BudgetGuard
@@ -40,7 +40,7 @@ export default function Navbar({ user }: { user: any }) {
           <>
             <Link
               href="/settings"
-              className="flex items-center space-x-1 hover:text-indigo-200 transition duration-200"
+              className="flex items-center space-x-1 hover:text-[#78A083] transition duration-200"
               title="Settings"
             >
               <FaCog />
@@ -50,7 +50,7 @@ export default function Navbar({ user }: { user: any }) {
             <button
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
+              className="px-4 py-2 bg-[#78A083] text-white rounded-md hover:bg-[#50727B] transition duration-200"
             >
               {isLoggingOut ? "Logging out..." : "Logout"}
             </button>
@@ -59,13 +59,13 @@ export default function Navbar({ user }: { user: any }) {
           <div className="space-x-2">
             <Link
               href="/auth/login"
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
+              className="px-4 py-2 bg-[#78A083] text-white rounded-md hover:bg-[#50727B] transition duration-200"
             >
               Login
             </Link>
             <Link
               href="/auth/signup"
-              className="px-4 py-2 border border-indigo-400 text-white rounded-md hover:bg-indigo-800 transition duration-200"
+              className="px-4 py-2 border border-[#50727B] text-white rounded-md hover:bg-[#50727B] transition duration-200"
             >
               Sign Up
             </Link>

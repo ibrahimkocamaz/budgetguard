@@ -4,21 +4,21 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#121212] text-white">
+    <div className="min-h-screen bg-[#344955] text-white">
       {/* Header */}
-      <header className="bg-indigo-900">
+      <header className="bg-[#35374B]">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div className="text-2xl font-bold">BudgetGuard</div>
           <div className="space-x-2">
             <Link
               href="/auth/login"
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
+              className="px-4 py-2 bg-[#78A083] text-white rounded-md hover:bg-[#50727B] transition duration-200"
             >
               Login
             </Link>
             <Link
               href="/auth/signup"
-              className="px-4 py-2 border border-indigo-400 text-white rounded-md hover:bg-indigo-800 transition duration-200"
+              className="px-4 py-2 border border-[#50727B] text-white rounded-md hover:bg-[#50727B] transition duration-200"
             >
               Sign Up
             </Link>
@@ -27,7 +27,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 bg-[#1e1e1e]">
+      <section className="py-20 bg-[#35374B]">
         <div className="container mx-auto px-6 text-center">
           <h1 className="text-5xl font-bold text-white mb-4">
             Take Control of Your Finances
@@ -38,7 +38,7 @@ export default function Home() {
           </p>
           <Link
             href="/auth/signup"
-            className="px-8 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200 text-lg font-medium"
+            className="px-8 py-3 bg-[#78A083] text-white rounded-md hover:bg-[#50727B] transition duration-200 text-lg font-medium"
           >
             Get Started — It&apos;s Free
           </Link>
@@ -46,7 +46,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-[#121212]">
+      <section className="py-20 bg-[#344955]">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-center text-white mb-16">
             Everything You Need to Manage Your Finances
@@ -54,10 +54,10 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-10">
             <div className="text-center">
-              <div className="bg-indigo-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="bg-[#35374B] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-indigo-400"
+                  className="h-8 w-8 text-[#78A083]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -80,10 +80,10 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <div className="bg-indigo-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="bg-[#35374B] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-indigo-400"
+                  className="h-8 w-8 text-[#78A083]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -112,10 +112,10 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <div className="bg-indigo-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="bg-[#35374B] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-indigo-400"
+                  className="h-8 w-8 text-[#78A083]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -141,7 +141,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-indigo-900 text-white">
+      <section className="py-16 bg-[#35374B] text-white">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">
             Ready to Take Control of Your Finances?
@@ -151,7 +151,7 @@ export default function Home() {
           </p>
           <Link
             href="/auth/signup"
-            className="px-8 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200 text-lg font-medium"
+            className="px-8 py-3 bg-[#78A083] text-white rounded-md hover:bg-[#50727B] transition duration-200 text-lg font-medium"
           >
             Get Started
           </Link>
@@ -159,7 +159,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 bg-[#1e1e1e]">
+      <footer className="py-10 bg-[#35374B]">
         <div className="container mx-auto px-6 text-center text-gray-400">
           <p>© 2025 BudgetGuard. All rights reserved.</p>
         </div>
