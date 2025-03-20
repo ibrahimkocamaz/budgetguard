@@ -14,22 +14,10 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!email || !password) {
-      setError("Please fill in all fields");
-      return;
-    }
+    setIsLoading(true);
+    setError("");
 
     try {
-      setIsLoading(true);
-      setError("");
-
-      // Show a toast message for debugging
-      toast.loading("Connecting to API...");
-
-      // Log the API call for debugging
-      console.log("Attempting to login with:", { email });
-
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -38,43 +26,35 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      // Log the response status for debugging
-      console.log("Login API response status:", response.status);
-      toast.dismiss();
+      const data = await response.json();
 
       if (!response.ok) {
-        const data = await response.json();
-        console.error("Login API error:", data);
-        toast.error("Login failed: " + (data.error || "Unknown error"));
-        throw new Error(data.error || "Login failed");
+        throw new Error(data.message || "Failed to sign in");
       }
 
-      // Show success toast
-      toast.success("Login successful!");
-
-      // Redirect to dashboard on successful login
+      toast.success("Signed in successfully!");
       router.push("/dashboard");
-    } catch (error: any) {
-      console.error("Login error:", error);
-      toast.error("Login error: " + error.message);
-      setError(error.message);
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen bg-[#121212] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-[#1e1e1e] p-8 rounded-lg shadow-md">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-indigo-300">
+            Sign in to BudgetGuard
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-gray-300">
             Or{" "}
             <Link
               href="/auth/signup"
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-indigo-400 hover:text-indigo-300"
             >
               create a new account
             </Link>
@@ -82,7 +62,7 @@ export default function LoginPage() {
         </div>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <div className="bg-red-900 border border-red-700 text-white px-4 py-3 rounded">
             {error}
           </div>
         )}
@@ -101,7 +81,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-[#2d2d2d] placeholder-gray-400 text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
             </div>
@@ -117,7 +97,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-[#2d2d2d] placeholder-gray-400 text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
             </div>
@@ -127,15 +107,15 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
             >
               {isLoading ? "Signing in..." : "Sign in"}
             </button>
           </div>
 
           {/* Add test user info */}
-          <div className="mt-4 p-4 bg-gray-50 rounded-md text-sm">
-            <p className="font-semibold text-gray-700">For testing:</p>
+          <div className="mt-4 p-4 bg-[#2d2d2d] rounded-md text-sm text-gray-300">
+            <p className="font-semibold text-indigo-300">For testing:</p>
             <p>Email: test@example.com</p>
             <p>Password: password123</p>
           </div>

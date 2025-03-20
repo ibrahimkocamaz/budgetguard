@@ -16,30 +16,16 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!name || !email || !password || !confirmPassword) {
-      setError("Please fill in all fields");
-      return;
-    }
+    setIsLoading(true);
+    setError("");
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters long");
+      setIsLoading(false);
       return;
     }
 
     try {
-      setIsLoading(true);
-      setError("");
-
-      // Show a loading toast
-      toast.loading("Creating your account...");
-      console.log("Attempting to sign up:", { email, name });
-
       const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
@@ -48,58 +34,51 @@ export default function SignupPage() {
         body: JSON.stringify({ name, email, password }),
       });
 
-      console.log("Signup API response status:", response.status);
-      toast.dismiss();
+      const data = await response.json();
 
       if (!response.ok) {
-        const data = await response.json();
-        console.error("Signup error response:", data);
-        toast.error("Signup failed: " + (data.error || "Unknown error"));
-        throw new Error(data.error || "Signup failed");
+        throw new Error(data.message || "Failed to sign up");
       }
 
       toast.success("Account created successfully!");
-
-      // Redirect to login page on successful signup
       router.push("/auth/login");
-    } catch (error: any) {
-      console.error("Signup error:", error);
-      toast.error("Signup error: " + error.message);
-      setError(error.message);
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen bg-[#121212] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-[#1e1e1e] p-8 rounded-lg shadow-md">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-indigo-300">
+            Create your BudgetGuard account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-gray-300">
             Or{" "}
             <Link
               href="/auth/login"
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-indigo-400 hover:text-indigo-300"
             >
-              sign in to your existing account
+              sign in to your account
             </Link>
           </p>
         </div>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <div className="bg-red-900 border border-red-700 text-white px-4 py-3 rounded">
             {error}
           </div>
         )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm space-y-2">
+          <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="name" className="sr-only">
-                Name
+                Full Name
               </label>
               <input
                 id="name"
@@ -109,8 +88,8 @@ export default function SignupPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Full name"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-[#2d2d2d] placeholder-gray-400 text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Full Name"
               />
             </div>
             <div>
@@ -125,7 +104,7 @@ export default function SignupPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-[#2d2d2d] placeholder-gray-400 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
             </div>
@@ -141,7 +120,7 @@ export default function SignupPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-[#2d2d2d] placeholder-gray-400 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
             </div>
@@ -157,8 +136,8 @@ export default function SignupPage() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Confirm password"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-[#2d2d2d] placeholder-gray-400 text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Confirm Password"
               />
             </div>
           </div>
@@ -167,9 +146,9 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
             >
-              {isLoading ? "Creating account..." : "Create account"}
+              {isLoading ? "Creating Account..." : "Sign up"}
             </button>
           </div>
         </form>

@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FinanceApp - Track and Manage Your Expenses",
+  title: "BudgetGuard - Take Control of Your Finances",
   description:
-    "A personal finance app to track expenses, manage categories, and gain insights into your spending habits.",
+    "A powerful budget tracking app to manage expenses, monitor spending habits, and achieve your financial goals.",
 };
 
 export default function RootLayout({
@@ -30,7 +30,16 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <Toaster position="top-right" />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: "var(--card-bg)",
+              color: "var(--foreground)",
+              border: "1px solid var(--border)",
+            },
+          }}
+        />
       </body>
     </html>
   );
